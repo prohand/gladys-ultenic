@@ -1,0 +1,158 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Ultenic",
+  "description": {
+    "en": "Monitor and control your Ultenic robot vacuums from Gladys.",
+    "fr": "Pilotez et surveillez vos aspirateurs robots Ultenic depuis Gladys."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/prohand/gladys-ultenic:1.0.0",
+  "gladys_version": ">=4.85.0",
+  "cover_image": "https://raw.githubusercontent.com/prohand/gladys-ultenic/main/cover.png",
+  "transports": ["cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": { "en": "Before you start", "fr": "Avant de commencer" },
+      "description": {
+        "en": "Ultenic robot vacuums run on the Tuya platform: this integration talks to them through the Tuya IoT cloud. Pair your vacuum in the Ultenic (or Smart Life) app, create a free Cloud project on the Tuya IoT Platform, link your app account to it, and paste the project Access ID and Access Secret below. The full step-by-step guide is in the Documentation link of this screen.",
+        "fr": "Les aspirateurs Ultenic fonctionnent sur la plateforme Tuya : cette intégration les pilote via le cloud IoT Tuya. Appairez votre aspirateur dans l'application Ultenic (ou Smart Life), créez un projet Cloud gratuit sur la Tuya IoT Platform, liez-y votre compte applicatif, puis collez ci-dessous l'Access ID et l'Access Secret du projet. Le guide pas à pas complet est dans le lien Documentation de cet écran."
+      },
+      "links": [
+        {
+          "url": "https://iot.tuya.com/",
+          "label": { "en": "Tuya IoT Platform", "fr": "Tuya IoT Platform" }
+        },
+        {
+          "url": "https://developer.tuya.com/en/docs/iot/link-devices?id=Kaje8gydtnh4y",
+          "label": {
+            "en": "Link an app account to a Cloud project",
+            "fr": "Lier un compte applicatif à un projet Cloud"
+          }
+        }
+      ]
+    },
+    {
+      "key": "region",
+      "type": "select",
+      "label": { "en": "Tuya data center", "fr": "Centre de données Tuya" },
+      "description": {
+        "en": "The data center of your Tuya Cloud project. It must be the one your Ultenic account was created in, otherwise no device is found.",
+        "fr": "Le centre de données de votre projet Tuya Cloud. Il doit être celui où votre compte Ultenic a été créé, sinon aucun appareil n'est trouvé."
+      },
+      "required": true,
+      "default": "eu",
+      "options": [
+        {
+          "value": "eu",
+          "label": { "en": "Central Europe", "fr": "Europe centrale" }
+        },
+        {
+          "value": "we",
+          "label": { "en": "Western Europe", "fr": "Europe de l'Ouest" }
+        },
+        {
+          "value": "us",
+          "label": { "en": "Western America", "fr": "Amérique de l'Ouest" }
+        },
+        {
+          "value": "ue",
+          "label": { "en": "Eastern America", "fr": "Amérique de l'Est" }
+        },
+        {
+          "value": "in",
+          "label": { "en": "India", "fr": "Inde" }
+        },
+        {
+          "value": "cn",
+          "label": { "en": "China", "fr": "Chine" }
+        }
+      ]
+    },
+    {
+      "key": "access_id",
+      "type": "string",
+      "label": { "en": "Access ID / Client ID", "fr": "Access ID / Client ID" },
+      "description": {
+        "en": "Found on the Overview page of your Tuya Cloud project.",
+        "fr": "Disponible sur la page Overview de votre projet Tuya Cloud."
+      },
+      "placeholder": { "en": "e.g. 3f8xxxxxxxxxxxxxxxxx", "fr": "ex. 3f8xxxxxxxxxxxxxxxxx" },
+      "required": true
+    },
+    {
+      "key": "access_secret",
+      "type": "secret",
+      "label": { "en": "Access Secret / Client Secret", "fr": "Access Secret / Client Secret" },
+      "description": {
+        "en": "Found next to the Access ID on the Tuya Cloud project page. Stored encrypted, never sent back to the browser.",
+        "fr": "À côté de l'Access ID sur la page du projet Tuya Cloud. Stocké chiffré, jamais renvoyé au navigateur."
+      },
+      "required": true
+    },
+    {
+      "key": "user_uid",
+      "type": "string",
+      "label": { "en": "Tuya user UID (optional)", "fr": "UID utilisateur Tuya (optionnel)" },
+      "description": {
+        "en": "Leave empty to discover every vacuum of the app accounts linked to the project. Fill it with the UID shown in Cloud > Devices > Link App Account to restrict the discovery to one account.",
+        "fr": "Laissez vide pour découvrir tous les aspirateurs des comptes applicatifs liés au projet. Renseignez l'UID affiché dans Cloud > Devices > Link App Account pour limiter la découverte à un seul compte."
+      },
+      "placeholder": { "en": "eu16xxxxxxxxxxxxxxxx", "fr": "eu16xxxxxxxxxxxxxxxx" },
+      "required": false
+    },
+    {
+      "key": "refresh_interval",
+      "type": "number",
+      "label": { "en": "Refresh interval (s)", "fr": "Intervalle de rafraîchissement (s)" },
+      "description": {
+        "en": "How often the vacuum states are read from the Tuya cloud. One single API call refreshes every vacuum, so a short interval stays cheap.",
+        "fr": "Fréquence de lecture des états des aspirateurs sur le cloud Tuya. Un seul appel d'API rafraîchit tous les aspirateurs, un intervalle court reste donc peu coûteux."
+      },
+      "required": false,
+      "default": 30,
+      "min": 10,
+      "max": 3600
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": { "en": "Test the connection", "fr": "Tester la connexion" },
+      "description": {
+        "en": "Ask the Tuya cloud for a token and count the Ultenic vacuums it returns.",
+        "fr": "Demande un jeton au cloud Tuya et compte les aspirateurs Ultenic renvoyés."
+      },
+      "timeout_seconds": 45
+    },
+    {
+      "key": "refresh_devices",
+      "label": { "en": "Refresh the vacuum list", "fr": "Rafraîchir la liste des aspirateurs" },
+      "description": {
+        "en": "Re-read the vacuums from the Tuya cloud and republish them to the Discovery screen.",
+        "fr": "Relit les aspirateurs depuis le cloud Tuya et les republie dans l'écran Découverte."
+      },
+      "timeout_seconds": 45
+    },
+    {
+      "key": "locate",
+      "label": { "en": "Locate a vacuum", "fr": "Localiser un aspirateur" },
+      "description": {
+        "en": "Make the chosen vacuum beep so you can find it under the furniture.",
+        "fr": "Fait sonner l'aspirateur choisi pour le retrouver sous les meubles."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Vacuum", "fr": "Aspirateur" },
+          "required": true
+        }
+      ]
+    }
+  ]
+}
