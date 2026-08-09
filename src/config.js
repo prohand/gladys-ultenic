@@ -11,6 +11,8 @@
 // arrived as a string from the form.
 // -----------------------------------------------------------------------------
 
+import { AUTH_MODES } from './ultenic/client.js';
+
 // Bounds of the refresh interval, kept consistent with the `min`/`max` declared
 // in the manifest.
 export const MIN_REFRESH_INTERVAL = 10;
@@ -22,7 +24,18 @@ export const DEFAULT_CONFIG = {
   region: 'eu', // Tuya data center, see src/ultenic/dataCenters.js
   access_id: '', // Tuya Cloud project Access ID
   access_secret: '', // Tuya Cloud project Access Secret
+  // How the Cloud project is authorized over the app account:
+  // 'linked_account'   -> the QR code of the Tuya console (Tuya Smart /
+  //                       Smart Life only: the Ultenic app has no scanner
+  //                       able to read it);
+  // 'user_credentials' -> the project logs in as the app user, no QR code.
+  auth_mode: AUTH_MODES.LINKED_ACCOUNT,
   user_uid: '', // optional: restrict the discovery to one app account
+  // User-credentials mode only.
+  app_schema: 'smartlife', // app the account belongs to
+  app_username: '', // e-mail (or phone) of the app account
+  app_password: '', // password of the app account
+  country_code: '', // phone country code, digits only ('33' for France)
   refresh_interval: 30, // seconds between two reads of the vacuum states
 };
 
@@ -62,7 +75,21 @@ export function normalizeConfig(raw = {}) {
     // and it produces an opaque "sign invalid" error on the Tuya side.
     access_id: String(raw.access_id ?? DEFAULT_CONFIG.access_id).trim(),
     access_secret: String(raw.access_secret ?? DEFAULT_CONFIG.access_secret).trim(),
+    auth_mode:
+      raw.auth_mode === AUTH_MODES.USER_CREDENTIALS
+        ? AUTH_MODES.USER_CREDENTIALS
+        : AUTH_MODES.LINKED_ACCOUNT,
     user_uid: String(raw.user_uid ?? DEFAULT_CONFIG.user_uid).trim(),
+    app_schema: String(raw.app_schema ?? DEFAULT_CONFIG.app_schema).trim(),
+    app_username: String(raw.app_username ?? DEFAULT_CONFIG.app_username).trim(),
+    // The password is NOT trimmed: a leading or trailing space can be part of
+    // it, and silently stripping it would make the login fail for good.
+    app_password: String(raw.app_password ?? DEFAULT_CONFIG.app_password),
+    // Tuya wants the digits only: "+33", "0033" and "33" all mean 33.
+    country_code: String(raw.country_code ?? DEFAULT_CONFIG.country_code)
+      .trim()
+      .replace(/^\+/, '')
+      .replace(/^00/, ''),
     refresh_interval: toBoundedNumber(
       raw.refresh_interval,
       DEFAULT_CONFIG.refresh_interval,
@@ -73,10 +100,22 @@ export function normalizeConfig(raw = {}) {
 }
 
 /**
- * Is the configuration complete enough to talk to the Tuya cloud?
+ * Is the configuration complete enough to talk to the Tuya cloud? The Cloud
+ * project credentials are always required; the user-credentials mode needs the
+ * app account on top of them.
  * @param {typeof DEFAULT_CONFIG} config the normalized configuration
- * @returns {boolean} true when the mandatory credentials are filled in
+ * @returns {boolean} true when everything the chosen mode needs is filled in
  */
 export function isConfigured(config) {
-  return config.access_id.length > 0 && config.access_secret.length > 0;
+  if (config.access_id.length === 0 || config.access_secret.length === 0) {
+    return false;
+  }
+  if (config.auth_mode === AUTH_MODES.USER_CREDENTIALS) {
+    return (
+      config.app_username.length > 0 &&
+      config.app_password.length > 0 &&
+      config.app_schema.length > 0
+    );
+  }
+  return true;
 }

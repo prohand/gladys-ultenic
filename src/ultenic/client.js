@@ -3,8 +3,22 @@
 //
 // Ultenic robot vacuums are built on the Tuya platform (the Ultenic app is a
 // branded Tuya app), so the way to reach them from a program is the Tuya IoT
-// cloud: the user creates a free Cloud project, links their Ultenic app
-// account to it, and gives us the project Access ID / Access Secret.
+// cloud: the user creates a free Cloud project and gives us its Access ID /
+// Access Secret.
+//
+// TWO ways to tell the project WHICH app account it may see, because the first
+// one does not work for everybody:
+//   - LINKED ACCOUNT (default): the user scans the "Link App Account" QR code
+//     of the Tuya console with their app. Simple, but the QR scanner is only
+//     implemented by Tuya Smart / Smart Life and by allowlisted branded apps —
+//     the Ultenic app has no such scanner (the one in its group management
+//     screen only reads home invitations and silently rejects this QR).
+//   - USER CREDENTIALS: the project authenticates AS the app user, with their
+//     e-mail, password, country code and app schema. No QR code involved.
+//     This is the escape hatch when the QR path is unavailable or keeps
+//     expiring.
+// Both end up with the same access token, and everything downstream is
+// identical.
 //
 // This module owns everything protocol-related:
 //   - the access token lifecycle (fetch, cache, refresh, retry once);
@@ -16,6 +30,7 @@
 // Node 20+ provides `fetch` natively: no HTTP dependency needed.
 // -----------------------------------------------------------------------------
 
+import { createHash } from 'node:crypto';
 import { createLogger } from '@gladysassistant/integration-sdk';
 import { getBaseUrl } from './dataCenters.js';
 import { buildSignedPath, computeSignature } from './signature.js';
@@ -37,6 +52,27 @@ export const VACUUM_CATEGORY = 'sd';
 
 // Max page size accepted by the device listing endpoints.
 const PAGE_SIZE = 100;
+
+// The two ways of authorizing the Cloud project over an app account.
+export const AUTH_MODES = {
+  LINKED_ACCOUNT: 'linked_account',
+  USER_CREDENTIALS: 'user_credentials',
+};
+
+// Token endpoints. Both are signed WITHOUT an access token.
+const TOKEN_PATH = '/v1.0/token';
+const USER_LOGIN_PATH = '/v1.0/iot-01/associated-users/actions/authorized-login';
+
+/**
+ * Hash a password the way the Tuya user-login endpoint expects it (MD5, lower
+ * case hex). Weak by modern standards, but it is the wire format Tuya defines
+ * for this endpoint: the plain password never leaves this process either way.
+ * @param {string} password the plain password
+ * @returns {string} the lowercase md5 hex digest
+ */
+function hashPassword(password) {
+  return createHash('md5').update(password, 'utf8').digest('hex');
+}
 
 /**
  * Error carrying the Tuya business code, so callers can tell an expired token
@@ -61,15 +97,38 @@ export class UltenicClient {
    * @param {string} options.accessId Tuya Cloud project Access ID
    * @param {string} options.accessSecret Tuya Cloud project Access Secret
    * @param {string} [options.userUid] optional app account UID to restrict the discovery
+   * @param {string} [options.authMode] one of AUTH_MODES
+   * @param {string} [options.appSchema] app schema, user-credentials mode only
+   * @param {string} [options.appUsername] app account e-mail, user-credentials mode only
+   * @param {string} [options.appPassword] app account password, user-credentials mode only
+   * @param {string} [options.countryCode] phone country code (e.g. '33'), user-credentials mode only
    */
-  constructor({ region, accessId, accessSecret, userUid = '' }) {
+  constructor({
+    region,
+    accessId,
+    accessSecret,
+    userUid = '',
+    authMode = AUTH_MODES.LINKED_ACCOUNT,
+    appSchema = '',
+    appUsername = '',
+    appPassword = '',
+    countryCode = '',
+  }) {
     this.baseUrl = getBaseUrl(region);
     this.accessId = accessId;
     this.accessSecret = accessSecret;
     this.userUid = userUid;
+    this.authMode = authMode;
+    this.appSchema = appSchema;
+    this.appUsername = appUsername;
+    this.appPassword = appPassword;
+    this.countryCode = countryCode;
     this.accessToken = null;
     this.refreshToken = null;
     this.tokenExpiresAt = 0;
+    // UID that came back with the token: in user-credentials mode it IS the
+    // app account, so it is the right thing to list the devices of.
+    this.tokenUid = '';
   }
 
   /**
@@ -135,19 +194,53 @@ export class UltenicClient {
   }
 
   /**
-   * Fetch a brand new token pair (grant_type=1, "simple mode": the project
-   * credentials themselves are the grant, no user interaction).
+   * @returns {boolean} true when the project authenticates as the app user
+   */
+  usesUserCredentials() {
+    return this.authMode === AUTH_MODES.USER_CREDENTIALS;
+  }
+
+  /**
+   * Fetch a brand new token pair, by whichever route the user configured.
    * @returns {Promise<void>} resolves once the token is cached
    */
   async fetchToken() {
-    const result = await this.rawRequest({
-      method: 'GET',
-      path: '/v1.0/token',
-      query: { grant_type: 1 },
+    const result = this.usesUserCredentials()
+      ? await this.loginAsAppUser()
+      : // "Simple mode" (grant_type=1): the project credentials themselves are
+        // the grant, and the devices come from the accounts linked by QR code.
+        await this.rawRequest({
+          method: 'GET',
+          path: TOKEN_PATH,
+          query: { grant_type: 1 },
+          authenticated: false,
+        });
+    this.storeToken(result);
+    logger.info(
+      `Tuya access token obtained (${this.usesUserCredentials() ? 'user credentials' : 'linked account'})`,
+    );
+  }
+
+  /**
+   * Authenticate as the app user: the QR-free route. The account must exist in
+   * the app whose `schema` is passed, in the data center of the project.
+   * @returns {Promise<object>} the Tuya token payload
+   */
+  async loginAsAppUser() {
+    if (!this.appUsername || !this.appPassword || !this.appSchema) {
+      throw new TuyaApiError('Missing app account, password or app schema.');
+    }
+    return this.rawRequest({
+      method: 'POST',
+      path: USER_LOGIN_PATH,
+      body: {
+        username: this.appUsername,
+        password: hashPassword(this.appPassword),
+        country_code: this.countryCode,
+        schema: this.appSchema,
+      },
       authenticated: false,
     });
-    this.storeToken(result);
-    logger.info('Tuya access token obtained');
   }
 
   /**
@@ -183,10 +276,9 @@ export class UltenicClient {
     this.refreshToken = result.refresh_token;
     // `expire_time` is a duration in seconds (typically 7200), not a date.
     this.tokenExpiresAt = Date.now() + Number(result.expire_time ?? 0) * 1000;
-    if (result.uid && !this.userUid) {
-      // Handy for the logs: the UID of the app account behind the project.
-      this.projectUid = result.uid;
-    }
+    // In user-credentials mode this UID IS the app account we logged in as:
+    // it is what the per-user device listing needs.
+    this.tokenUid = result.uid ?? '';
   }
 
   /**
@@ -233,21 +325,29 @@ export class UltenicClient {
     this.accessToken = null;
     this.refreshToken = null;
     this.tokenExpiresAt = 0;
+    this.tokenUid = '';
   }
 
   /**
-   * List every device of the linked app account(s), with its current status.
+   * List every device of the app account(s) the project can see, with its
+   * current status.
    *
-   * Two endpoints, same shape: with a UID we ask for that one account, without
-   * we ask for every account linked to the Cloud project — the case of a user
-   * who linked their Ultenic account and never wrote the UID down.
+   * Two endpoints, same payload shape:
+   *   - per user, when we know which account to ask for. That is the case
+   *     whenever the user filled in a UID, and ALWAYS in user-credentials
+   *     mode, where the token itself belongs to one app account;
+   *   - across every account linked to the Cloud project otherwise — the
+   *     linked-account user who never wrote their UID down.
    * @returns {Promise<Array<object>>} the raw Tuya devices
    */
   async listDevices() {
-    if (this.userUid) {
+    await this.ensureToken();
+    const uid = this.userUid || (this.usesUserCredentials() ? this.tokenUid : '');
+
+    if (uid) {
       const result = await this.request({
         method: 'GET',
-        path: `/v1.0/users/${this.userUid}/devices`,
+        path: `/v1.0/users/${uid}/devices`,
       });
       return Array.isArray(result) ? result : [];
     }

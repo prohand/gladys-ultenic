@@ -1,6 +1,6 @@
 import { test, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { TuyaApiError, UltenicClient } from '../src/ultenic/client.js';
+import { AUTH_MODES, TuyaApiError, UltenicClient } from '../src/ultenic/client.js';
 import { computeSignature } from '../src/ultenic/signature.js';
 import { tuyaVacuumDevice } from './helpers/tuyaFixtures.js';
 
@@ -244,6 +244,117 @@ test('sendCommands posts the exact body it signed', async () => {
       body: commandCall.body,
     }),
   );
+});
+
+/**
+ * @returns {UltenicClient} a client authenticating as an app user
+ */
+function createUserCredentialsClient() {
+  return new UltenicClient({
+    region: 'eu',
+    accessId: 'access-id',
+    accessSecret: 'access-secret',
+    authMode: AUTH_MODES.USER_CREDENTIALS,
+    appSchema: 'smartlife',
+    appUsername: 'me@example.com',
+    appPassword: 'hunter2',
+    countryCode: '33',
+  });
+}
+
+test('the app account mode logs in instead of asking for a project token', async () => {
+  const calls = stubFetch([
+    {
+      match: /associated-users\/actions\/authorized-login$/,
+      respond: () => ({
+        success: true,
+        result: {
+          access_token: 'user-token',
+          refresh_token: 'user-refresh',
+          expire_time: 7200,
+          uid: 'eu1699999999',
+        },
+      }),
+    },
+    {
+      match: /\/v1\.0\/users\/eu1699999999\/devices$/,
+      respond: () => ({ success: true, result: [tuyaVacuumDevice()] }),
+    },
+  ]);
+
+  const vacuums = await createUserCredentialsClient().listVacuums();
+
+  assert.equal(vacuums.length, 1);
+  const loginCall = calls[0];
+  assert.equal(loginCall.method, 'POST');
+  // The password is md5-hashed on the wire, never sent in clear.
+  assert.deepEqual(JSON.parse(loginCall.body), {
+    username: 'me@example.com',
+    password: '2ab96390c7dbe3439de74d0c9b0b1767',
+    country_code: '33',
+    schema: 'smartlife',
+  });
+  // The login is signed WITHOUT an access token, like the other token endpoint.
+  assert.equal(loginCall.headers.access_token, undefined);
+  assert.equal(
+    loginCall.headers.sign,
+    computeSignature({
+      accessId: 'access-id',
+      accessSecret: 'access-secret',
+      timestamp: loginCall.headers.t,
+      method: 'POST',
+      signedPath: '/v1.0/iot-01/associated-users/actions/authorized-login',
+      body: loginCall.body,
+    }),
+  );
+  // No QR code was ever involved, so there is no "linked account" listing:
+  // the devices come from the UID the login returned.
+  assert.ok(!calls.some((call) => call.url.includes('associated-users/devices')));
+});
+
+test('the app account mode refuses to call the cloud with half a login', async () => {
+  const client = new UltenicClient({
+    region: 'eu',
+    accessId: 'access-id',
+    accessSecret: 'access-secret',
+    authMode: AUTH_MODES.USER_CREDENTIALS,
+    appSchema: 'smartlife',
+    appUsername: 'me@example.com',
+  });
+  globalThis.fetch = async () => {
+    throw new Error('should not be called');
+  };
+  await assert.rejects(() => client.listVacuums(), /Missing app account, password or app schema/);
+});
+
+test('an explicit UID still wins in app account mode', async () => {
+  const calls = stubFetch([
+    {
+      match: /authorized-login$/,
+      respond: () => ({
+        success: true,
+        result: { access_token: 't', refresh_token: 'r', expire_time: 7200, uid: 'from-token' },
+      }),
+    },
+    {
+      match: /\/v1\.0\/users\/chosen-uid\/devices$/,
+      respond: () => ({ success: true, result: [] }),
+    },
+  ]);
+
+  const client = new UltenicClient({
+    region: 'eu',
+    accessId: 'access-id',
+    accessSecret: 'access-secret',
+    authMode: AUTH_MODES.USER_CREDENTIALS,
+    appSchema: 'smartlife',
+    appUsername: 'me@example.com',
+    appPassword: 'hunter2',
+    userUid: 'chosen-uid',
+  });
+  await client.listVacuums();
+
+  assert.ok(calls.some((call) => call.url.endsWith('/v1.0/users/chosen-uid/devices')));
 });
 
 test('an HTTP error is reported as such', async () => {

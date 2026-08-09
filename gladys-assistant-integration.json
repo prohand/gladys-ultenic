@@ -17,8 +17,8 @@
       "type": "section",
       "label": { "en": "Before you start", "fr": "Avant de commencer" },
       "description": {
-        "en": "Ultenic robot vacuums run on the Tuya platform: this integration talks to them through the Tuya IoT cloud. Pair your vacuum in the Ultenic (or Smart Life) app, create a free Cloud project on the Tuya IoT Platform, link your app account to it, and paste the project Access ID and Access Secret below. The full step-by-step guide is in the Documentation link of this screen.",
-        "fr": "Les aspirateurs Ultenic fonctionnent sur la plateforme Tuya : cette intégration les pilote via le cloud IoT Tuya. Appairez votre aspirateur dans l'application Ultenic (ou Smart Life), créez un projet Cloud gratuit sur la Tuya IoT Platform, liez-y votre compte applicatif, puis collez ci-dessous l'Access ID et l'Access Secret du projet. Le guide pas à pas complet est dans le lien Documentation de cet écran."
+        "en": "Ultenic robot vacuums run on the Tuya platform: this integration talks to them through the Tuya IoT cloud. Create a free Cloud project on the Tuya IoT Platform and paste its Access ID and Access Secret below. Important: the Tuya QR code that links an app account is only readable by the Tuya Smart and Smart Life apps — the Ultenic app has no scanner for it. Either pair your vacuum in Smart Life, or use the app account mode below. The full step-by-step guide is in the Documentation link of this screen.",
+        "fr": "Les aspirateurs Ultenic fonctionnent sur la plateforme Tuya : cette intégration les pilote via le cloud IoT Tuya. Créez un projet Cloud gratuit sur la Tuya IoT Platform et collez ci-dessous son Access ID et son Access Secret. Important : le QR code Tuya qui lie un compte applicatif n'est lisible que par les applications Tuya Smart et Smart Life — l'application Ultenic n'a pas de scanner capable de le lire. Appairez votre aspirateur dans Smart Life, ou utilisez le mode compte applicatif ci-dessous. Le guide pas à pas complet est dans le lien Documentation de cet écran."
       },
       "links": [
         {
@@ -93,14 +93,90 @@
       "required": true
     },
     {
+      "key": "account_section",
+      "type": "section",
+      "label": { "en": "Your app account", "fr": "Votre compte applicatif" },
+      "description": {
+        "en": "How the Cloud project is allowed to see your vacuums. Linked account: you scanned the QR code of Cloud > Devices > Link App Account — this only works from the Tuya Smart or Smart Life app. App account: the project logs in with your app e-mail and password instead, no QR code. Pick the second one if the QR code cannot be scanned or keeps expiring.",
+        "fr": "Comment le projet Cloud est autorisé à voir vos aspirateurs. Compte lié : vous avez scanné le QR code de Cloud > Devices > Link App Account — cela ne fonctionne que depuis l'application Tuya Smart ou Smart Life. Compte applicatif : le projet se connecte avec l'e-mail et le mot de passe de votre application, sans QR code. Choisissez le second si le QR code ne peut pas être scanné ou expire sans cesse."
+      }
+    },
+    {
+      "key": "auth_mode",
+      "type": "select",
+      "display": "radio",
+      "label": { "en": "Authorization mode", "fr": "Mode d'autorisation" },
+      "required": true,
+      "default": "linked_account",
+      "options": [
+        {
+          "value": "linked_account",
+          "label": {
+            "en": "Linked account (QR code scanned in Smart Life)",
+            "fr": "Compte lié (QR code scanné dans Smart Life)"
+          }
+        },
+        {
+          "value": "user_credentials",
+          "label": {
+            "en": "App account (e-mail and password, no QR code)",
+            "fr": "Compte applicatif (e-mail et mot de passe, sans QR code)"
+          }
+        }
+      ]
+    },
+    {
       "key": "user_uid",
       "type": "string",
       "label": { "en": "Tuya user UID (optional)", "fr": "UID utilisateur Tuya (optionnel)" },
       "description": {
-        "en": "Leave empty to discover every vacuum of the app accounts linked to the project. Fill it with the UID shown in Cloud > Devices > Link App Account to restrict the discovery to one account.",
-        "fr": "Laissez vide pour découvrir tous les aspirateurs des comptes applicatifs liés au projet. Renseignez l'UID affiché dans Cloud > Devices > Link App Account pour limiter la découverte à un seul compte."
+        "en": "Linked account mode only. Leave empty to discover every vacuum of the app accounts linked to the project. Fill it with the UID shown in Cloud > Devices > Link App Account to restrict the discovery to one account.",
+        "fr": "Mode compte lié uniquement. Laissez vide pour découvrir tous les aspirateurs des comptes applicatifs liés au projet. Renseignez l'UID affiché dans Cloud > Devices > Link App Account pour limiter la découverte à un seul compte."
       },
       "placeholder": { "en": "eu16xxxxxxxxxxxxxxxx", "fr": "eu16xxxxxxxxxxxxxxxx" },
+      "required": false
+    },
+    {
+      "key": "app_schema",
+      "type": "string",
+      "label": { "en": "App schema", "fr": "Schéma de l'application" },
+      "description": {
+        "en": "App account mode only. The Tuya code of the app your account belongs to: smartlife for Smart Life, tuyaSmart for Tuya Smart. A branded app such as Ultenic has its own code, which Tuya does not normally authorize for a third-party project.",
+        "fr": "Mode compte applicatif uniquement. Le code Tuya de l'application à laquelle appartient votre compte : smartlife pour Smart Life, tuyaSmart pour Tuya Smart. Une application de marque comme Ultenic a son propre code, que Tuya n'autorise normalement pas pour un projet tiers."
+      },
+      "placeholder": { "en": "smartlife", "fr": "smartlife" },
+      "required": false,
+      "default": "smartlife"
+    },
+    {
+      "key": "app_username",
+      "type": "string",
+      "label": { "en": "App account e-mail", "fr": "E-mail du compte applicatif" },
+      "description": {
+        "en": "App account mode only. The e-mail (or phone number) you log into the app with.",
+        "fr": "Mode compte applicatif uniquement. L'e-mail (ou le numéro de téléphone) avec lequel vous vous connectez à l'application."
+      },
+      "required": false
+    },
+    {
+      "key": "app_password",
+      "type": "secret",
+      "label": { "en": "App account password", "fr": "Mot de passe du compte applicatif" },
+      "description": {
+        "en": "App account mode only. Stored encrypted, never sent back to the browser.",
+        "fr": "Mode compte applicatif uniquement. Stocké chiffré, jamais renvoyé au navigateur."
+      },
+      "required": false
+    },
+    {
+      "key": "country_code",
+      "type": "string",
+      "label": { "en": "Country code", "fr": "Indicatif pays" },
+      "description": {
+        "en": "App account mode only. The phone country code of the account, digits only: 33 for France, 1 for the United States, 44 for the United Kingdom.",
+        "fr": "Mode compte applicatif uniquement. L'indicatif téléphonique du compte, chiffres uniquement : 33 pour la France, 1 pour les États-Unis, 44 pour le Royaume-Uni."
+      },
+      "placeholder": { "en": "33", "fr": "33" },
       "required": false
     },
     {

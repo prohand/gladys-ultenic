@@ -55,3 +55,45 @@ test('isConfigured requires both halves of the Tuya credentials', () => {
   assert.equal(isConfigured(normalizeConfig({ access_secret: 'def' })), false);
   assert.equal(isConfigured(normalizeConfig({ access_id: 'abc', access_secret: 'def' })), true);
 });
+
+test('the app account mode also requires the app account', () => {
+  const base = { access_id: 'abc', access_secret: 'def', auth_mode: 'user_credentials' };
+  assert.equal(isConfigured(normalizeConfig(base)), false);
+  assert.equal(isConfigured(normalizeConfig({ ...base, app_username: 'me@example.com' })), false);
+  assert.equal(
+    isConfigured(normalizeConfig({ ...base, app_username: 'me@example.com', app_password: 'x' })),
+    true,
+    'app_schema defaults to smartlife, so the account alone is enough',
+  );
+  assert.equal(
+    isConfigured(
+      normalizeConfig({
+        ...base,
+        app_username: 'me@example.com',
+        app_password: 'x',
+        app_schema: '',
+      }),
+    ),
+    false,
+  );
+});
+
+test('an unknown auth mode falls back to the linked account', () => {
+  // The mode drives which token endpoint is called: an unexpected value must
+  // not end up being passed through to Tuya.
+  assert.equal(normalizeConfig({ auth_mode: 'something_else' }).auth_mode, 'linked_account');
+  assert.equal(normalizeConfig().auth_mode, 'linked_account');
+  assert.equal(normalizeConfig({ auth_mode: 'user_credentials' }).auth_mode, 'user_credentials');
+});
+
+test('the country code is reduced to its digits', () => {
+  assert.equal(normalizeConfig({ country_code: '+33' }).country_code, '33');
+  assert.equal(normalizeConfig({ country_code: '0033' }).country_code, '33');
+  assert.equal(normalizeConfig({ country_code: ' 44 ' }).country_code, '44');
+});
+
+test('the app password keeps its surrounding spaces', () => {
+  // Trimming a password that legitimately starts or ends with a space would
+  // make the login fail forever, with nothing on screen to explain it.
+  assert.equal(normalizeConfig({ app_password: ' hunter2 ' }).app_password, ' hunter2 ');
+});
