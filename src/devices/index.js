@@ -69,12 +69,21 @@ export class DeviceRegistry {
    * @param {object} config the normalized configuration
    */
   setConfig(config) {
+    // Every key the Tuya client is built from: a change on any of them means
+    // the next call must authenticate again, possibly as somebody else.
+    const CLIENT_KEYS = [
+      'region',
+      'access_id',
+      'access_secret',
+      'auth_mode',
+      'user_uid',
+      'app_schema',
+      'app_username',
+      'app_password',
+      'country_code',
+    ];
     const credentialsChanged =
-      !this.config ||
-      this.config.region !== config.region ||
-      this.config.access_id !== config.access_id ||
-      this.config.access_secret !== config.access_secret ||
-      this.config.user_uid !== config.user_uid;
+      !this.config || CLIENT_KEYS.some((key) => this.config[key] !== config[key]);
 
     this.config = config;
 
@@ -83,7 +92,12 @@ export class DeviceRegistry {
         region: config.region,
         accessId: config.access_id,
         accessSecret: config.access_secret,
+        authMode: config.auth_mode,
         userUid: config.user_uid,
+        appSchema: config.app_schema,
+        appUsername: config.app_username,
+        appPassword: config.app_password,
+        countryCode: config.country_code,
       });
       // The catalog belongs to the old account: drop it rather than mixing.
       this.vacuums.clear();

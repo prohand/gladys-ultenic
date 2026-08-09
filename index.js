@@ -18,6 +18,7 @@
 import { GladysIntegration, logger } from '@gladysassistant/integration-sdk';
 import { isConfigured, normalizeConfig } from './src/config.js';
 import { DeviceRegistry } from './src/devices/index.js';
+import { AUTH_MODES } from './src/ultenic/client.js';
 
 const gladys = new GladysIntegration();
 const registry = new DeviceRegistry(gladys);
@@ -30,8 +31,8 @@ let config = normalizeConfig();
 let lastReportedStatus = null;
 
 const NOT_CONFIGURED_MESSAGE = {
-  en: 'Fill in your Tuya Cloud Access ID and Access Secret to connect your Ultenic vacuums.',
-  fr: 'Renseignez l’Access ID et l’Access Secret de votre projet Tuya Cloud pour connecter vos aspirateurs Ultenic.',
+  en: 'Fill in your Tuya Cloud Access ID and Access Secret to connect your Ultenic vacuums. In app account mode, the e-mail, password and app schema are needed too.',
+  fr: 'Renseignez l’Access ID et l’Access Secret de votre projet Tuya Cloud pour connecter vos aspirateurs Ultenic. En mode compte applicatif, l’e-mail, le mot de passe et le schéma sont également nécessaires.',
 };
 
 /**
@@ -69,6 +70,14 @@ function explainError(err) {
     };
   }
   if (err.code === 1106 || err.code === 1114) {
+    // Same Tuya code, two very different things to go and check depending on
+    // how the project was authorized over the account.
+    if (config.auth_mode === AUTH_MODES.USER_CREDENTIALS) {
+      return {
+        en: 'Tuya refused the app account: check the e-mail, the password, the country code and the app schema (smartlife for Smart Life). A branded app schema is usually not authorized for a third-party project.',
+        fr: "Tuya a refusé le compte applicatif : vérifiez l'e-mail, le mot de passe, l'indicatif pays et le schéma (smartlife pour Smart Life). Le schéma d'une application de marque n'est en général pas autorisé pour un projet tiers.",
+      };
+    }
     return {
       en: 'Tuya refused the request: check that the app account is linked to the Cloud project and that the data center matches.',
       fr: 'Tuya a refusé la requête : vérifiez que le compte applicatif est lié au projet Cloud et que le centre de données correspond.',

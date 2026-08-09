@@ -37,9 +37,31 @@ chosen device beep, using the dynamic device select of the SDK).
 Ultenic robot vacuums run on the Tuya platform — the Ultenic app is a branded
 Tuya app — and there is no documented local protocol for them. The integration
 therefore talks to the Tuya IoT cloud with the credentials of a free Cloud
-project the user links their Ultenic app account to. The manifest declares
-`"transports": ["cloud"]` accordingly: no "prefer local" toggle is offered for
-a channel that does not exist.
+project, authorized over the app account that owns the vacuum. The manifest
+declares `"transports": ["cloud"]` accordingly: no "prefer local" toggle is
+offered for a channel that does not exist.
+
+### Two authorization modes, because the QR code is not universal
+
+Tuya's documented way of authorizing a Cloud project over an app account is a
+QR code scanned from the app. That scanner only exists in **Tuya Smart** and
+**Smart Life** (plus allowlisted branded apps): the Ultenic app has none — the
+scanner in its group-management screen only reads home invitations and silently
+rejects the Tuya QR code. So the integration supports two modes:
+
+| `auth_mode`        | Token endpoint                                                | When to use it                                    |
+| ------------------ | ------------------------------------------------------------- | ------------------------------------------------- |
+| `linked_account`   | `GET /v1.0/token?grant_type=1`                                | The QR code was scanned from Smart Life (default) |
+| `user_credentials` | `POST /v1.0/iot-01/associated-users/actions/authorized-login` | No QR code: log in as the app user directly       |
+
+In `user_credentials` mode the token belongs to one app account, so the devices
+are listed through `/v1.0/users/{uid}/devices` with the UID the login returned,
+instead of the project-wide `associated-users` listing. Everything downstream —
+signing, refresh, commands — is identical.
+
+The credentials mode is not a way to keep the vacuum in the Ultenic app: Tuya
+does not normally authorize a third-party project over a branded app's schema.
+It is the escape hatch for a QR code that keeps expiring or refuses to scan.
 
 Setup guide (with the Tuya console screens, step by step):
 [`docs/en.md`](./docs/en.md) — [`docs/fr.md`](./docs/fr.md). Gladys re-hosts
@@ -131,8 +153,10 @@ the `docker_image` tag), pushes the `vX.Y.Z` tag and builds the
 ## Notes
 
 - Requires **Node.js ≥ 20** (built-in global `fetch`, no HTTP dependency).
-- The Tuya Access Secret is declared as a `secret` config field: it is stored
-  encrypted by Gladys and never sent back to the browser.
+- The Tuya Access Secret and the app account password are declared as `secret`
+  config fields: they are stored encrypted by Gladys and never sent back to the
+  browser. The password is md5-hashed before it leaves the process — weak by
+  modern standards, but it is the wire format Tuya defines for that endpoint.
 - A Tuya Cloud project runs on a trial subscription that has to be extended
   from the Tuya console every few months. It is free, but it does expire — the
   documentation says so, and the Configuration screen reports the resulting
