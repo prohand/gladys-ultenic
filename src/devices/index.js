@@ -234,6 +234,29 @@ export class DeviceRegistry {
   }
 
   /**
+   * Publish everything known about one vacuum again, from memory (no cloud
+   * call). Gladys drops the states sent before a device exists, while the
+   * dedupe maps recorded them as published: a vacuum added from the Discovery
+   * tab while it sat on its dock (values that never move) stayed empty.
+   * @param {string} externalId the Gladys device external_id
+   * @returns {Promise<void>} resolves once the states are published
+   */
+  async republishDevice(externalId) {
+    if (!this.vacuums.has(externalId)) {
+      return;
+    }
+    const prefix = `${externalId}:`;
+    for (const key of this.lastPublishedStates.keys()) {
+      if (key.startsWith(prefix)) {
+        this.lastPublishedStates.delete(key);
+      }
+    }
+    this.lastPublishedTransports.delete(externalId);
+    await this.publishStates();
+    await this.publishTransports();
+  }
+
+  /**
    * Re-read every vacuum in ONE cloud call and publish what changed.
    * @returns {Promise<void>} resolves once the refresh is done
    */

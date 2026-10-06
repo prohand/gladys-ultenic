@@ -163,6 +163,16 @@ gladys.onPoll(async (device) => {
   await registry.refreshOne(requireVacuum(device));
 });
 
+// --- The user added (or updated) a vacuum in Gladys --------------------------
+// States published before the device existed were dropped by the core:
+// publish its current values again, from memory.
+async function republishDevice(device) {
+  logger.info(`Device saved in Gladys -> publishing ${device.external_id}`);
+  await registry.republishDevice(device.external_id);
+}
+gladys.onDeviceCreated(republishDevice);
+gladys.onDeviceUpdated(republishDevice);
+
 // --- Manifest actions: buttons in the Configuration screen -------------------
 gladys.onAction('test_connection', async () => {
   if (!isConfigured(config)) {

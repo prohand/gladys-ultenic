@@ -133,3 +133,15 @@ test('the manifest version and the docker image tag follow package.json', () => 
     'the docker_image tag must be the manifest version',
   );
 });
+
+// A `source: "devices"` field only validates on a core that resolves dynamic
+// options (Gladys 5.1.0): below that, every action carrying one fails.
+test('an action field with a device source requires Gladys 5.1.0', () => {
+  const usesDeviceSource = (manifest.actions ?? []).some((action) =>
+    (action.fields ?? []).some((field) => field.source === 'devices'),
+  );
+  if (usesDeviceSource) {
+    const [major, minor] = manifest.gladys_version.replace(/^>=/, '').split('.').map(Number);
+    assert.ok(major > 5 || (major === 5 && minor >= 1), manifest.gladys_version);
+  }
+});

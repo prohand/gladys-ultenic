@@ -212,3 +212,21 @@ test('an unconfigured registry refuses to call the cloud', () => {
   const registry = new DeviceRegistry(createFakeGladys());
   assert.throws(() => registry.requireClient(), /not configured/);
 });
+
+test('a vacuum added in Gladys gets its unchanged values published again', async () => {
+  const { gladys, registry } = createRegistry({ listVacuums: () => [tuyaVacuumDevice()] });
+  await registry.discover();
+  // Published before the user added the device: Gladys dropped them.
+  await registry.publishCatalog();
+  const firstBatch = gladys.published.length;
+  const transports = gladys.transports.length;
+  const { external_id: externalId } = registry.buildDiscoveredDevices()[0];
+
+  await registry.republishDevice(externalId);
+
+  assert.equal(gladys.published.length, firstBatch * 2, 'every state published again');
+  assert.equal(gladys.transports.length, transports + 1);
+  // An unknown device is ignored.
+  await registry.republishDevice('ext:ultenic:vacuum:unknown');
+  assert.equal(gladys.published.length, firstBatch * 2);
+});

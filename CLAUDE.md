@@ -64,7 +64,10 @@ src/devices/index.js       DeviceRegistry: catalog, refresh loop, state dedupe, 
   credential change rebuilds the client and clears the caches (`setConfig`).
 - **Every feature declares `min`/`max`** (NOT NULL in Gladys).
 - The `locate` action field uses `source: "devices"`: the core only validates that field type
-  from Gladys 5.1.0.
+  from Gladys 5.1.0, hence `gladys_version >=5.1.0` (pinned by `test/manifest.test.js`).
+- **A vacuum added in Gladys is republished from memory** (`onDeviceCreated` /
+  `onDeviceUpdated` → `registry.republishDevice()`): Gladys drops the states sent before the
+  device exists, while the dedupe maps recorded them as published.
 
 ### Manifest
 

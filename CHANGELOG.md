@@ -20,3 +20,9 @@ All notable changes to this integration are documented here. The format follows
 - Integration SDK upgraded from 0.11 to 0.14.
 
 [Unreleased]: https://github.com/prohand/gladys-ultenic/commits/main
+
+### Fixed
+
+- A vacuum added from the Discovery tab while it sat on its dock shows its values right away: its states are published again when Gladys creates the device, instead of waiting for a value to change.
+- `gladys_version` raised to `>=5.1.0`: the "Locate a vacuum" action uses a device select, which the core only accepts from Gladys 5.1.0.
+- The Release workflow re-runs Prettier on the manifest after `jq`.
