@@ -6,8 +6,8 @@
     "en": "Monitor and control your Ultenic robot vacuums from Gladys.",
     "fr": "Pilotez et surveillez vos aspirateurs robots Ultenic depuis Gladys."
   },
-  "version": "1.0.0",
-  "docker_image": "ghcr.io/prohand/gladys-ultenic:1.0.0",
+  "version": "1.1.0",
+  "docker_image": "ghcr.io/prohand/gladys-ultenic:1.1.0",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/prohand/gladys-ultenic/main/cover.png",
   "transports": ["cloud"],
@@ -15,7 +15,10 @@
     {
       "key": "intro",
       "type": "section",
-      "label": { "en": "Before you start", "fr": "Avant de commencer" },
+      "label": {
+        "en": "Before you start",
+        "fr": "Avant de commencer"
+      },
       "description": {
         "en": "Ultenic robot vacuums run on the Tuya platform: this integration talks to them through the Tuya IoT cloud. Create a free Cloud project on the Tuya IoT Platform and paste its Access ID and Access Secret below. Important: the Tuya QR code that links an app account is only readable by the Tuya Smart and Smart Life apps — the Ultenic app has no scanner for it. Either pair your vacuum in Smart Life, or use the app account mode below. The full step-by-step guide is in the Documentation link of this screen.",
         "fr": "Les aspirateurs Ultenic fonctionnent sur la plateforme Tuya : cette intégration les pilote via le cloud IoT Tuya. Créez un projet Cloud gratuit sur la Tuya IoT Platform et collez ci-dessous son Access ID et son Access Secret. Important : le QR code Tuya qui lie un compte applicatif n'est lisible que par les applications Tuya Smart et Smart Life — l'application Ultenic n'a pas de scanner capable de le lire. Appairez votre aspirateur dans Smart Life, ou utilisez le mode compte applicatif ci-dessous. Le guide pas à pas complet est dans le lien Documentation de cet écran."
@@ -23,7 +26,10 @@
       "links": [
         {
           "url": "https://iot.tuya.com/",
-          "label": { "en": "Tuya IoT Platform", "fr": "Tuya IoT Platform" }
+          "label": {
+            "en": "Tuya IoT Platform",
+            "fr": "Tuya IoT Platform"
+          }
         },
         {
           "url": "https://developer.tuya.com/en/docs/iot/link-devices?id=Kaje8gydtnh4y",
@@ -37,7 +43,10 @@
     {
       "key": "region",
       "type": "select",
-      "label": { "en": "Tuya data center", "fr": "Centre de données Tuya" },
+      "label": {
+        "en": "Tuya data center",
+        "fr": "Centre de données Tuya"
+      },
       "description": {
         "en": "The data center of your Tuya Cloud project. It must be the one your Ultenic account was created in, otherwise no device is found.",
         "fr": "Le centre de données de votre projet Tuya Cloud. Il doit être celui où votre compte Ultenic a été créé, sinon aucun appareil n'est trouvé."
@@ -47,45 +56,72 @@
       "options": [
         {
           "value": "eu",
-          "label": { "en": "Central Europe", "fr": "Europe centrale" }
+          "label": {
+            "en": "Central Europe",
+            "fr": "Europe centrale"
+          }
         },
         {
           "value": "we",
-          "label": { "en": "Western Europe", "fr": "Europe de l'Ouest" }
+          "label": {
+            "en": "Western Europe",
+            "fr": "Europe de l'Ouest"
+          }
         },
         {
           "value": "us",
-          "label": { "en": "Western America", "fr": "Amérique de l'Ouest" }
+          "label": {
+            "en": "Western America",
+            "fr": "Amérique de l'Ouest"
+          }
         },
         {
           "value": "ue",
-          "label": { "en": "Eastern America", "fr": "Amérique de l'Est" }
+          "label": {
+            "en": "Eastern America",
+            "fr": "Amérique de l'Est"
+          }
         },
         {
           "value": "in",
-          "label": { "en": "India", "fr": "Inde" }
+          "label": {
+            "en": "India",
+            "fr": "Inde"
+          }
         },
         {
           "value": "cn",
-          "label": { "en": "China", "fr": "Chine" }
+          "label": {
+            "en": "China",
+            "fr": "Chine"
+          }
         }
       ]
     },
     {
       "key": "access_id",
       "type": "string",
-      "label": { "en": "Access ID / Client ID", "fr": "Access ID / Client ID" },
+      "label": {
+        "en": "Access ID / Client ID",
+        "fr": "Access ID / Client ID"
+      },
       "description": {
         "en": "Found on the Overview page of your Tuya Cloud project.",
         "fr": "Disponible sur la page Overview de votre projet Tuya Cloud."
       },
-      "placeholder": { "en": "e.g. 3f8xxxxxxxxxxxxxxxxx", "fr": "ex. 3f8xxxxxxxxxxxxxxxxx" },
+      "placeholder": {
+        "en": "e.g. 3f8xxxxxxxxxxxxxxxxx",
+        "fr": "ex. 3f8xxxxxxxxxxxxxxxxx"
+      },
       "required": true
     },
     {
       "key": "access_secret",
       "type": "secret",
-      "label": { "en": "Access Secret / Client Secret", "fr": "Access Secret / Client Secret" },
+      "label": {
+        "en": "Access Secret / Client Secret",
+        "fr": "Access Secret / Client Secret"
+      },
       "description": {
         "en": "Found next to the Access ID on the Tuya Cloud project page. Stored encrypted, never sent back to the browser.",
         "fr": "À côté de l'Access ID sur la page du projet Tuya Cloud. Stocké chiffré, jamais renvoyé au navigateur."
@@ -95,7 +131,10 @@
     {
       "key": "account_section",
       "type": "section",
-      "label": { "en": "Your app account", "fr": "Votre compte applicatif" },
+      "label": {
+        "en": "Your app account",
+        "fr": "Votre compte applicatif"
+      },
       "description": {
         "en": "How the Cloud project is allowed to see your vacuums. Linked account: you scanned the QR code of Cloud > Devices > Link App Account — this only works from the Tuya Smart or Smart Life app. App account: the project logs in with your app e-mail and password instead, no QR code. Pick the second one if the QR code cannot be scanned or keeps expiring.",
         "fr": "Comment le projet Cloud est autorisé à voir vos aspirateurs. Compte lié : vous avez scanné le QR code de Cloud > Devices > Link App Account — cela ne fonctionne que depuis l'application Tuya Smart ou Smart Life. Compte applicatif : le projet se connecte avec l'e-mail et le mot de passe de votre application, sans QR code. Choisissez le second si le QR code ne peut pas être scanné ou expire sans cesse."
@@ -105,7 +144,10 @@
       "key": "auth_mode",
       "type": "select",
       "display": "radio",
-      "label": { "en": "Authorization mode", "fr": "Mode d'autorisation" },
+      "label": {
+        "en": "Authorization mode",
+        "fr": "Mode d'autorisation"
+      },
       "required": true,
       "default": "linked_account",
       "options": [
@@ -128,30 +170,45 @@
     {
       "key": "user_uid",
       "type": "string",
-      "label": { "en": "Tuya user UID (optional)", "fr": "UID utilisateur Tuya (optionnel)" },
+      "label": {
+        "en": "Tuya user UID (optional)",
+        "fr": "UID utilisateur Tuya (optionnel)"
+      },
       "description": {
         "en": "Linked account mode only. Leave empty to discover every vacuum of the app accounts linked to the project. Fill it with the UID shown in Cloud > Devices > Link App Account to restrict the discovery to one account.",
         "fr": "Mode compte lié uniquement. Laissez vide pour découvrir tous les aspirateurs des comptes applicatifs liés au projet. Renseignez l'UID affiché dans Cloud > Devices > Link App Account pour limiter la découverte à un seul compte."
       },
-      "placeholder": { "en": "eu16xxxxxxxxxxxxxxxx", "fr": "eu16xxxxxxxxxxxxxxxx" },
+      "placeholder": {
+        "en": "eu16xxxxxxxxxxxxxxxx",
+        "fr": "eu16xxxxxxxxxxxxxxxx"
+      },
       "required": false
     },
     {
       "key": "app_schema",
       "type": "string",
-      "label": { "en": "App schema", "fr": "Schéma de l'application" },
+      "label": {
+        "en": "App schema",
+        "fr": "Schéma de l'application"
+      },
       "description": {
         "en": "App account mode only. The Tuya code of the app your account belongs to: smartlife for Smart Life, tuyaSmart for Tuya Smart. A branded app such as Ultenic has its own code, which Tuya does not normally authorize for a third-party project.",
         "fr": "Mode compte applicatif uniquement. Le code Tuya de l'application à laquelle appartient votre compte : smartlife pour Smart Life, tuyaSmart pour Tuya Smart. Une application de marque comme Ultenic a son propre code, que Tuya n'autorise normalement pas pour un projet tiers."
       },
-      "placeholder": { "en": "smartlife", "fr": "smartlife" },
+      "placeholder": {
+        "en": "smartlife",
+        "fr": "smartlife"
+      },
       "required": false,
       "default": "smartlife"
     },
     {
       "key": "app_username",
       "type": "string",
-      "label": { "en": "App account e-mail", "fr": "E-mail du compte applicatif" },
+      "label": {
+        "en": "App account e-mail",
+        "fr": "E-mail du compte applicatif"
+      },
       "description": {
         "en": "App account mode only. The e-mail (or phone number) you log into the app with.",
         "fr": "Mode compte applicatif uniquement. L'e-mail (ou le numéro de téléphone) avec lequel vous vous connectez à l'application."
@@ -161,7 +218,10 @@
     {
       "key": "app_password",
       "type": "secret",
-      "label": { "en": "App account password", "fr": "Mot de passe du compte applicatif" },
+      "label": {
+        "en": "App account password",
+        "fr": "Mot de passe du compte applicatif"
+      },
       "description": {
         "en": "App account mode only. Stored encrypted, never sent back to the browser.",
         "fr": "Mode compte applicatif uniquement. Stocké chiffré, jamais renvoyé au navigateur."
@@ -171,18 +231,27 @@
     {
       "key": "country_code",
       "type": "string",
-      "label": { "en": "Country code", "fr": "Indicatif pays" },
+      "label": {
+        "en": "Country code",
+        "fr": "Indicatif pays"
+      },
       "description": {
         "en": "App account mode only. The phone country code of the account, digits only: 33 for France, 1 for the United States, 44 for the United Kingdom.",
         "fr": "Mode compte applicatif uniquement. L'indicatif téléphonique du compte, chiffres uniquement : 33 pour la France, 1 pour les États-Unis, 44 pour le Royaume-Uni."
       },
-      "placeholder": { "en": "33", "fr": "33" },
+      "placeholder": {
+        "en": "33",
+        "fr": "33"
+      },
       "required": false
     },
     {
       "key": "refresh_interval",
       "type": "number",
-      "label": { "en": "Refresh interval (s)", "fr": "Intervalle de rafraîchissement (s)" },
+      "label": {
+        "en": "Refresh interval (s)",
+        "fr": "Intervalle de rafraîchissement (s)"
+      },
       "description": {
         "en": "How often the vacuum states are read from the Tuya cloud. One single API call refreshes every vacuum, so a short interval stays cheap.",
         "fr": "Fréquence de lecture des états des aspirateurs sur le cloud Tuya. Un seul appel d'API rafraîchit tous les aspirateurs, un intervalle court reste donc peu coûteux."
@@ -196,7 +265,10 @@
   "actions": [
     {
       "key": "test_connection",
-      "label": { "en": "Test the connection", "fr": "Tester la connexion" },
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion"
+      },
       "description": {
         "en": "Ask the Tuya cloud for a token and count the Ultenic vacuums it returns.",
         "fr": "Demande un jeton au cloud Tuya et compte les aspirateurs Ultenic renvoyés."
@@ -205,7 +277,10 @@
     },
     {
       "key": "refresh_devices",
-      "label": { "en": "Refresh the vacuum list", "fr": "Rafraîchir la liste des aspirateurs" },
+      "label": {
+        "en": "Refresh the vacuum list",
+        "fr": "Rafraîchir la liste des aspirateurs"
+      },
       "description": {
         "en": "Re-read the vacuums from the Tuya cloud and republish them to the Discovery screen.",
         "fr": "Relit les aspirateurs depuis le cloud Tuya et les republie dans l'écran Découverte."
@@ -214,7 +289,10 @@
     },
     {
       "key": "locate",
-      "label": { "en": "Locate a vacuum", "fr": "Localiser un aspirateur" },
+      "label": {
+        "en": "Locate a vacuum",
+        "fr": "Localiser un aspirateur"
+      },
       "description": {
         "en": "Make the chosen vacuum beep so you can find it under the furniture.",
         "fr": "Fait sonner l'aspirateur choisi pour le retrouver sous les meubles."
@@ -225,7 +303,10 @@
           "key": "device",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Vacuum", "fr": "Aspirateur" },
+          "label": {
+            "en": "Vacuum",
+            "fr": "Aspirateur"
+          },
           "required": true
         }
       ]
