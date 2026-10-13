@@ -145,3 +145,67 @@ test('an action field with a device source requires Gladys 5.1.0', () => {
     assert.ok(major > 5 || (major === 5 && minor >= 1), manifest.gladys_version);
   }
 });
+
+// Every text the user reads is offered in the four languages of the Gladys
+// interface: the front falls back to English, but a missing translation is a
+// screen half in one language.
+const LANGUAGES = ['en', 'fr', 'de', 'es'];
+
+/**
+ * Collect every multi-language object of the manifest (an object whose `en`
+ * key holds a string), with its path for the assertion messages.
+ * @param {unknown} node the manifest node to walk
+ * @param {string} path where the node sits
+ * @param {Array<{ path: string, text: object }>} found accumulator
+ * @returns {Array<{ path: string, text: object }>} the multi-language objects
+ */
+function multiLanguageTexts(node, path = '', found = []) {
+  if (Array.isArray(node)) {
+    node.forEach((child, index) => multiLanguageTexts(child, `${path}[${index}]`, found));
+  } else if (node && typeof node === 'object') {
+    if (typeof node.en === 'string') {
+      found.push({ path, text: node });
+    } else {
+      for (const [key, child] of Object.entries(node)) {
+        multiLanguageTexts(child, path ? `${path}.${key}` : key, found);
+      }
+    }
+  }
+  return found;
+}
+
+test('every manifest text is offered in English, French, German and Spanish', () => {
+  const texts = multiLanguageTexts(manifest);
+  assert.ok(texts.length > 0);
+  for (const { path, text } of texts) {
+    assert.deepEqual(Object.keys(text).sort(), [...LANGUAGES].sort(), path);
+    for (const language of LANGUAGES) {
+      assert.ok(text[language].trim().length > 0, `${path}.${language} is empty`);
+    }
+  }
+});
+
+test('the catalog description holds 10 to 100 characters in every language', () => {
+  for (const language of LANGUAGES) {
+    const { length } = manifest.description[language];
+    assert.ok(length >= 10 && length <= 100, `description.${language}: ${length} characters`);
+  }
+});
+
+test('section texts stay under the store limit in every language', () => {
+  for (const section of manifest.config_schema.filter((field) => field.type === 'section')) {
+    for (const language of LANGUAGES) {
+      assert.ok(
+        (section.description?.[language] ?? '').length <= 1000,
+        `section "${section.key}" description.${language} is too long`,
+      );
+    }
+  }
+});
+
+test('the user documentation exists in every language', async () => {
+  for (const language of LANGUAGES) {
+    const doc = await readFile(new URL(`../docs/${language}.md`, import.meta.url), 'utf8');
+    assert.ok(doc.length >= 300, `docs/${language}.md is too short`);
+  }
+});

@@ -64,7 +64,8 @@ does not normally authorize a third-party project over a branded app's schema.
 It is the escape hatch for a QR code that keeps expiring or refuses to scan.
 
 Setup guide (with the Tuya console screens, step by step):
-[`docs/en.md`](./docs/en.md) — [`docs/fr.md`](./docs/fr.md). Gladys re-hosts
+[`docs/en.md`](./docs/en.md) — [`docs/fr.md`](./docs/fr.md) —
+[`docs/de.md`](./docs/de.md) — [`docs/es.md`](./docs/es.md). Gladys re-hosts
 them behind the **Documentation** link of the Configuration screen.
 
 ## Project structure
@@ -82,7 +83,7 @@ them behind the **Documentation** link of the Configuration screen.
 │  └─ devices/
 │     ├─ index.js                    #   registry: catalog + refresh loop
 │     └─ vacuum.js                   #   one vacuum: features, states, commands
-├─ docs/{en,fr}.md                   # user documentation, re-hosted by Gladys
+├─ docs/{en,fr,de,es}.md             # user documentation, re-hosted by Gladys
 ├─ gladys-assistant-integration.json # manifest (name, config schema, actions…)
 ├─ Dockerfile                        # Node 24 Alpine, read-only rootfs ready
 └─ test/                             # node --test, no test framework to install

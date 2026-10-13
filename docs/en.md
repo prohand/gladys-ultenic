@@ -122,7 +122,7 @@ connection** button answers in a few seconds.
 
 ## Step 4 — Configure the integration in Gladys
 
-Install the Ultenic integration, open its **Configuration** screen, and fill in:
+Install the Ultenic integration, open its **Configuration** tab, and fill in:
 
 | Field                  | What to put there                                       |
 | ---------------------- | ------------------------------------------------------- |
@@ -137,14 +137,14 @@ In _App account_ mode, four extra fields are used: **App schema**
 (`smartlife`), **App account e-mail**, **App account password** and **Country
 code** (`33` for France). They are ignored in _Linked account_ mode.
 
-Save, then click **Test the connection**. It should answer with the number of
+Click **Save configuration**, then **Test the connection**. It should answer with the number of
 vacuums found and their names.
 
 ## Step 5 — Create the devices
 
-Open the **Discovery** tab of the integration: your vacuums are listed there.
-Click **Create** on each one you want in Gladys, give it a room, and you are
-done.
+Open the **Discover** tab of the integration: your vacuums are listed there.
+Click **Add to Gladys** on each one you want in Gladys, give it a room, and you
+are done.
 
 ## What you get
 
@@ -154,7 +154,7 @@ Each vacuum becomes a Gladys device with:
   returning to dock, charging, docked.
 - **Run mode** — set it to _Clean_ to start a run, to _Idle_ to stop it.
 - **Clean mode** — the suction level, mapped onto the Gladys clean modes
-  (_Mop_ = suction off, _Quiet_ = gentle, _Auto_ = normal, _Deep clean_ =
+  (_Mop_ = suction off, _Quiet_ = gentle, _Auto_ = normal, _Deep Clean_ =
   strong/max). Only the levels your model supports are accepted.
 - **Return to dock** — sends the vacuum home.
 - **Battery**, in percent.
@@ -164,7 +164,7 @@ Each vacuum becomes a Gladys device with:
 The sensors are added only if your vacuum actually publishes them, so two
 different Ultenic models will not necessarily expose the same feature list.
 
-A **cloud** badge is shown on the device: it turns **unreachable** when the Tuya
+A **Cloud** badge is shown on the device: it turns **Unreachable** when the Tuya
 cloud reports the vacuum as offline (unplugged dock, Wi-Fi down).
 
 ## Troubleshooting

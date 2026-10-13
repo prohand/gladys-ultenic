@@ -82,5 +82,5 @@ No network: `test/helpers/tuyaFixtures.js` holds realistic Tuya payloads, `fetch
 ## Conventions
 
 Prettier formats, ESLint catches mistakes. Comments explain **why**; exported functions carry
-JSDoc. User-facing messages are bilingual `{ en, fr }`; user docs in `docs/en.md` and
-`docs/fr.md`, kept in sync. The container rootfs is read-only: write nothing.
+JSDoc. User-facing text is `{ en, fr, de, es }`; user docs in `docs/en.md`, `docs/fr.md`,
+`docs/de.md` and `docs/es.md`, kept in sync. The container rootfs is read-only: write nothing.

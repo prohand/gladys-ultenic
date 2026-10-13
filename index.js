@@ -33,6 +33,8 @@ let lastReportedStatus = null;
 const NOT_CONFIGURED_MESSAGE = {
   en: 'Fill in your Tuya Cloud Access ID and Access Secret to connect your Ultenic vacuums. In app account mode, the e-mail, password and app schema are needed too.',
   fr: 'Renseignez l’Access ID et l’Access Secret de votre projet Tuya Cloud pour connecter vos aspirateurs Ultenic. En mode compte applicatif, l’e-mail, le mot de passe et le schéma sont également nécessaires.',
+  de: 'Trage die Access ID und das Access Secret deines Tuya-Cloud-Projekts ein, um deine Ultenic-Saugroboter zu verbinden. Im Modus App-Konto werden außerdem E-Mail-Adresse, Passwort und App-Schema benötigt.',
+  es: 'Indique el Access ID y el Access Secret de su proyecto Tuya Cloud para conectar sus aspiradores Ultenic. En el modo cuenta de la aplicación, también se necesitan el correo electrónico, la contraseña y el esquema de la aplicación.',
 };
 
 /**
@@ -67,6 +69,8 @@ function explainError(err) {
     return {
       en: 'Tuya refused the credentials (sign invalid): check the Access ID and Access Secret.',
       fr: 'Tuya a refusé les identifiants (sign invalid) : vérifiez l’Access ID et l’Access Secret.',
+      de: 'Tuya hat die Zugangsdaten abgelehnt (sign invalid): Prüfe die Access ID und das Access Secret.',
+      es: 'Tuya ha rechazado las credenciales (sign invalid): compruebe el Access ID y el Access Secret.',
     };
   }
   if (err.code === 1106 || err.code === 1114) {
@@ -76,16 +80,22 @@ function explainError(err) {
       return {
         en: 'Tuya refused the app account: check the e-mail, the password, the country code and the app schema (smartlife for Smart Life). A branded app schema is usually not authorized for a third-party project.',
         fr: "Tuya a refusé le compte applicatif : vérifiez l'e-mail, le mot de passe, l'indicatif pays et le schéma (smartlife pour Smart Life). Le schéma d'une application de marque n'est en général pas autorisé pour un projet tiers.",
+        de: 'Tuya hat das App-Konto abgelehnt: Prüfe E-Mail-Adresse, Passwort, Ländervorwahl und App-Schema (smartlife für Smart Life). Das Schema einer Marken-App ist für ein Drittprojekt in der Regel nicht freigegeben.',
+        es: 'Tuya ha rechazado la cuenta de la aplicación: compruebe el correo electrónico, la contraseña, el prefijo del país y el esquema (smartlife para Smart Life). El esquema de una aplicación de marca no suele estar autorizado para un proyecto de terceros.',
       };
     }
     return {
       en: 'Tuya refused the request: check that the app account is linked to the Cloud project and that the data center matches.',
       fr: 'Tuya a refusé la requête : vérifiez que le compte applicatif est lié au projet Cloud et que le centre de données correspond.',
+      de: 'Tuya hat die Anfrage abgelehnt: Prüfe, ob das App-Konto mit dem Cloud-Projekt verknüpft ist und ob das Rechenzentrum übereinstimmt.',
+      es: 'Tuya ha rechazado la solicitud: compruebe que la cuenta de la aplicación está vinculada al proyecto Cloud y que el centro de datos coincide.',
     };
   }
   return {
     en: `Could not reach the Tuya cloud: ${err.message}`,
     fr: `Impossible de joindre le cloud Tuya : ${err.message}`,
+    de: `Die Tuya-Cloud ist nicht erreichbar: ${err.message}`,
+    es: `No se puede contactar con la nube de Tuya: ${err.message}`,
   };
 }
 
@@ -184,12 +194,16 @@ gladys.onAction('test_connection', async () => {
     return {
       en: 'Connected to the Tuya cloud, but no robot vacuum was found. Check the data center and that your Ultenic account is linked to the Cloud project.',
       fr: 'Connexion au cloud Tuya réussie, mais aucun aspirateur robot trouvé. Vérifiez le centre de données et que votre compte Ultenic est bien lié au projet Cloud.',
+      de: 'Verbindung zur Tuya-Cloud hergestellt, aber kein Saugroboter gefunden. Prüfe das Rechenzentrum und ob dein Ultenic-Konto mit dem Cloud-Projekt verknüpft ist.',
+      es: 'Conexión con la nube de Tuya establecida, pero no se ha encontrado ningún robot aspirador. Compruebe el centro de datos y que su cuenta Ultenic está vinculada al proyecto Cloud.',
     };
   }
   const names = vacuums.map((device) => device.name).join(', ');
   return {
     en: `Connected: ${vacuums.length} vacuum(s) found (${names}).`,
     fr: `Connexion réussie : ${vacuums.length} aspirateur(s) trouvé(s) (${names}).`,
+    de: `Verbunden: ${vacuums.length} Saugroboter gefunden (${names}).`,
+    es: `Conectado: ${vacuums.length} aspirador(es) encontrado(s) (${names}).`,
   };
 });
 
@@ -201,8 +215,10 @@ gladys.onAction('refresh_devices', async () => {
   const vacuums = await registry.discover();
   await registry.publishCatalog();
   return {
-    en: `${vacuums.length} vacuum(s) published to the Discovery screen.`,
+    en: `${vacuums.length} vacuum(s) published to the Discover tab.`,
     fr: `${vacuums.length} aspirateur(s) publié(s) dans l’écran Découverte.`,
+    de: `${vacuums.length} Saugroboter im Tab „Entdecken“ veröffentlicht.`,
+    es: `${vacuums.length} aspirador(es) publicado(s) en la pestaña «Descubrir».`,
   };
 });
 
@@ -217,12 +233,16 @@ gladys.onAction('locate', async (fields) => {
     return {
       en: 'This vacuum is not known by the integration anymore. Refresh the vacuum list.',
       fr: 'Cet aspirateur n’est plus connu de l’intégration. Rafraîchissez la liste des aspirateurs.',
+      de: 'Dieser Saugroboter ist der Integration nicht mehr bekannt. Aktualisiere die Liste der Saugroboter.',
+      es: 'La integración ya no conoce este aspirador. Actualice la lista de aspiradores.',
     };
   }
   await vacuum.locate(registry.requireClient());
   return {
     en: 'Listen: the vacuum is beeping.',
     fr: 'Écoutez : l’aspirateur émet un signal sonore.',
+    de: 'Hör hin: Der Saugroboter piept.',
+    es: 'Escuche: el aspirador está emitiendo un pitido.',
   };
 });
 
