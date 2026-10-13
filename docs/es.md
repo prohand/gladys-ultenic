@@ -144,7 +144,7 @@ aplicación** (`smartlife`), **Correo de la cuenta de la aplicación**,
 **Contraseña de la cuenta de la aplicación** y **Prefijo del país** (`34` para
 España, `33` para Francia). En el modo _Cuenta vinculada_ se ignoran.
 
-Guarde y haga clic en **Probar la conexión**. La respuesta debería indicar el
+Haga clic en **Guardar configuración** y luego en **Probar la conexión**. La respuesta debería indicar el
 número de aspiradores encontrados y sus nombres.
 
 ## Paso 5 — Crear los dispositivos

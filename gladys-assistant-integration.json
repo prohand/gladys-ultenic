@@ -5,7 +5,7 @@
   "description": {
     "en": "Monitor and control your Ultenic robot vacuums from Gladys.",
     "fr": "Pilotez et surveillez vos aspirateurs robots Ultenic depuis Gladys.",
-    "de": "Überwachen und steuern Sie Ihre Ultenic-Saugroboter mit Gladys.",
+    "de": "Überwache und steuere deine Ultenic-Saugroboter mit Gladys.",
     "es": "Supervise y controle sus robots aspiradores Ultenic desde Gladys."
   },
   "version": "1.1.0",
@@ -20,13 +20,13 @@
       "label": {
         "en": "Before you start",
         "fr": "Avant de commencer",
-        "de": "Bevor Sie beginnen",
+        "de": "Bevor du beginnst",
         "es": "Antes de empezar"
       },
       "description": {
         "en": "Ultenic robot vacuums run on the Tuya platform: this integration talks to them through the Tuya IoT cloud. Create a free Cloud project on the Tuya IoT Platform and paste its Access ID and Access Secret below. Important: the Tuya QR code that links an app account is only readable by the Tuya Smart and Smart Life apps — the Ultenic app has no scanner for it. Either pair your vacuum in Smart Life, or use the app account mode below. The full step-by-step guide is in the Documentation link of this screen.",
         "fr": "Les aspirateurs Ultenic fonctionnent sur la plateforme Tuya : cette intégration les pilote via le cloud IoT Tuya. Créez un projet Cloud gratuit sur la Tuya IoT Platform et collez ci-dessous son Access ID et son Access Secret. Important : le QR code Tuya qui lie un compte applicatif n'est lisible que par les applications Tuya Smart et Smart Life — l'application Ultenic n'a pas de scanner capable de le lire. Appairez votre aspirateur dans Smart Life, ou utilisez le mode compte applicatif ci-dessous. Le guide pas à pas complet est dans le lien Documentation de cet écran.",
-        "de": "Ultenic-Saugroboter laufen auf der Tuya-Plattform: Diese Integration steuert sie über die Tuya-IoT-Cloud. Erstellen Sie ein kostenloses Cloud-Projekt auf der Tuya IoT Platform und fügen Sie unten dessen Access ID und Access Secret ein. Wichtig: Der Tuya-QR-Code, der ein App-Konto verknüpft, kann nur von den Apps Tuya Smart und Smart Life gelesen werden — die Ultenic-App hat keinen Scanner dafür. Koppeln Sie Ihren Saugroboter entweder in Smart Life, oder verwenden Sie unten den Modus App-Konto. Die vollständige Schritt-für-Schritt-Anleitung finden Sie über den Link „Dokumentation“ dieses Bildschirms.",
+        "de": "Ultenic-Saugroboter laufen auf der Tuya-Plattform: Diese Integration steuert sie über die Tuya-IoT-Cloud. Erstelle ein kostenloses Cloud-Projekt auf der Tuya IoT Platform und füge unten dessen Access ID und Access Secret ein. Wichtig: Der Tuya-QR-Code, der ein App-Konto verknüpft, kann nur von den Apps Tuya Smart und Smart Life gelesen werden — die Ultenic-App hat keinen Scanner dafür. Kopple deinen Saugroboter entweder in Smart Life, oder verwende unten den Modus App-Konto. Die vollständige Schritt-für-Schritt-Anleitung findest du über den Link „Dokumentation“ dieses Bildschirms.",
         "es": "Los robots aspiradores Ultenic funcionan sobre la plataforma Tuya: esta integración los controla a través de la nube IoT de Tuya. Cree un proyecto Cloud gratuito en la Tuya IoT Platform y pegue abajo su Access ID y su Access Secret. Importante: el código QR de Tuya que vincula una cuenta de la aplicación solo lo pueden leer las aplicaciones Tuya Smart y Smart Life — la aplicación Ultenic no tiene un escáner capaz de leerlo. Empareje su aspirador en Smart Life, o utilice el modo cuenta de la aplicación que aparece más abajo. La guía completa paso a paso está en el enlace «Documentación» de esta pantalla."
       },
       "links": [
@@ -62,7 +62,7 @@
       "description": {
         "en": "The data center of your Tuya Cloud project. It must be the one your Ultenic account was created in, otherwise no device is found.",
         "fr": "Le centre de données de votre projet Tuya Cloud. Il doit être celui où votre compte Ultenic a été créé, sinon aucun appareil n'est trouvé.",
-        "de": "Das Rechenzentrum Ihres Tuya-Cloud-Projekts. Es muss dasjenige sein, in dem Ihr Ultenic-Konto erstellt wurde, sonst wird kein Gerät gefunden.",
+        "de": "Das Rechenzentrum deines Tuya-Cloud-Projekts. Es muss dasjenige sein, in dem dein Ultenic-Konto erstellt wurde, sonst wird kein Gerät gefunden.",
         "es": "El centro de datos de su proyecto Tuya Cloud. Debe ser aquel en el que se creó su cuenta Ultenic; si no, no se encontrará ningún dispositivo."
       },
       "required": true,
@@ -136,7 +136,7 @@
       "description": {
         "en": "Found on the Overview page of your Tuya Cloud project.",
         "fr": "Disponible sur la page Overview de votre projet Tuya Cloud.",
-        "de": "Zu finden auf der Seite Overview Ihres Tuya-Cloud-Projekts.",
+        "de": "Zu finden auf der Seite Overview deines Tuya-Cloud-Projekts.",
         "es": "Disponible en la página Overview de su proyecto Tuya Cloud."
       },
       "placeholder": {
@@ -170,13 +170,13 @@
       "label": {
         "en": "Your app account",
         "fr": "Votre compte applicatif",
-        "de": "Ihr App-Konto",
+        "de": "Dein App-Konto",
         "es": "Su cuenta de la aplicación"
       },
       "description": {
         "en": "How the Cloud project is allowed to see your vacuums. Linked account: you scanned the QR code of Cloud > Devices > Link App Account — this only works from the Tuya Smart or Smart Life app. App account: the project logs in with your app e-mail and password instead, no QR code. Pick the second one if the QR code cannot be scanned or keeps expiring.",
         "fr": "Comment le projet Cloud est autorisé à voir vos aspirateurs. Compte lié : vous avez scanné le QR code de Cloud > Devices > Link App Account — cela ne fonctionne que depuis l'application Tuya Smart ou Smart Life. Compte applicatif : le projet se connecte avec l'e-mail et le mot de passe de votre application, sans QR code. Choisissez le second si le QR code ne peut pas être scanné ou expire sans cesse.",
-        "de": "Wie das Cloud-Projekt Ihre Saugroboter sehen darf. Verknüpftes Konto: Sie haben den QR-Code unter Cloud > Devices > Link App Account gescannt — das funktioniert nur aus der App Tuya Smart oder Smart Life. App-Konto: Das Projekt meldet sich stattdessen mit der E-Mail-Adresse und dem Passwort Ihrer App an, ohne QR-Code. Wählen Sie die zweite Option, wenn der QR-Code nicht gescannt werden kann oder ständig abläuft.",
+        "de": "Wie das Cloud-Projekt deine Saugroboter sehen darf. Verknüpftes Konto: Du hast den QR-Code unter Cloud > Devices > Link App Account gescannt — das funktioniert nur aus der App Tuya Smart oder Smart Life. App-Konto: Das Projekt meldet sich stattdessen mit der E-Mail-Adresse und dem Passwort deiner App an, ohne QR-Code. Wähle die zweite Option, wenn der QR-Code nicht gescannt werden kann oder ständig abläuft.",
         "es": "Cómo se autoriza al proyecto Cloud a ver sus aspiradores. Cuenta vinculada: ha escaneado el código QR de Cloud > Devices > Link App Account — esto solo funciona desde la aplicación Tuya Smart o Smart Life. Cuenta de la aplicación: el proyecto inicia sesión con el correo electrónico y la contraseña de su aplicación, sin código QR. Elija la segunda opción si el código QR no se puede escanear o caduca una y otra vez."
       }
     },
@@ -225,7 +225,7 @@
       "description": {
         "en": "Linked account mode only. Leave empty to discover every vacuum of the app accounts linked to the project. Fill it with the UID shown in Cloud > Devices > Link App Account to restrict the discovery to one account.",
         "fr": "Mode compte lié uniquement. Laissez vide pour découvrir tous les aspirateurs des comptes applicatifs liés au projet. Renseignez l'UID affiché dans Cloud > Devices > Link App Account pour limiter la découverte à un seul compte.",
-        "de": "Nur im Modus verknüpftes Konto. Leer lassen, um alle Saugroboter der mit dem Projekt verknüpften App-Konten zu entdecken. Tragen Sie die unter Cloud > Devices > Link App Account angezeigte UID ein, um die Suche auf ein Konto zu beschränken.",
+        "de": "Nur im Modus verknüpftes Konto. Leer lassen, um alle Saugroboter der mit dem Projekt verknüpften App-Konten zu entdecken. Trage die unter Cloud > Devices > Link App Account angezeigte UID ein, um die Suche auf ein Konto zu beschränken.",
         "es": "Solo en el modo cuenta vinculada. Déjelo vacío para descubrir todos los aspiradores de las cuentas de la aplicación vinculadas al proyecto. Indique el UID que aparece en Cloud > Devices > Link App Account para limitar la búsqueda a una sola cuenta."
       },
       "placeholder": {
@@ -248,7 +248,7 @@
       "description": {
         "en": "App account mode only. The Tuya code of the app your account belongs to: smartlife for Smart Life, tuyaSmart for Tuya Smart. A branded app such as Ultenic has its own code, which Tuya does not normally authorize for a third-party project.",
         "fr": "Mode compte applicatif uniquement. Le code Tuya de l'application à laquelle appartient votre compte : smartlife pour Smart Life, tuyaSmart pour Tuya Smart. Une application de marque comme Ultenic a son propre code, que Tuya n'autorise normalement pas pour un projet tiers.",
-        "de": "Nur im Modus App-Konto. Der Tuya-Code der App, zu der Ihr Konto gehört: smartlife für Smart Life, tuyaSmart für Tuya Smart. Eine Marken-App wie Ultenic hat einen eigenen Code, den Tuya für ein Drittprojekt normalerweise nicht freigibt.",
+        "de": "Nur im Modus App-Konto. Der Tuya-Code der App, zu der dein Konto gehört: smartlife für Smart Life, tuyaSmart für Tuya Smart. Eine Marken-App wie Ultenic hat einen eigenen Code, den Tuya für ein Drittprojekt normalerweise nicht freigibt.",
         "es": "Solo en el modo cuenta de la aplicación. El código Tuya de la aplicación a la que pertenece su cuenta: smartlife para Smart Life, tuyaSmart para Tuya Smart. Una aplicación de marca como Ultenic tiene su propio código, que Tuya normalmente no autoriza para un proyecto de terceros."
       },
       "placeholder": {
@@ -272,7 +272,7 @@
       "description": {
         "en": "App account mode only. The e-mail (or phone number) you log into the app with.",
         "fr": "Mode compte applicatif uniquement. L'e-mail (ou le numéro de téléphone) avec lequel vous vous connectez à l'application.",
-        "de": "Nur im Modus App-Konto. Die E-Mail-Adresse (oder Telefonnummer), mit der Sie sich in der App anmelden.",
+        "de": "Nur im Modus App-Konto. Die E-Mail-Adresse (oder Telefonnummer), mit der du dich in der App anmeldest.",
         "es": "Solo en el modo cuenta de la aplicación. El correo electrónico (o número de teléfono) con el que inicia sesión en la aplicación."
       },
       "required": false
@@ -364,7 +364,7 @@
         "es": "Actualizar la lista de aspiradores"
       },
       "description": {
-        "en": "Re-read the vacuums from the Tuya cloud and republish them to the Discovery screen.",
+        "en": "Re-read the vacuums from the Tuya cloud and republish them to the Discover tab.",
         "fr": "Relit les aspirateurs depuis le cloud Tuya et les republie dans l'écran Découverte.",
         "de": "Liest die Saugroboter erneut aus der Tuya-Cloud und veröffentlicht sie wieder im Tab „Entdecken“.",
         "es": "Vuelve a leer los aspiradores desde la nube de Tuya y los publica de nuevo en la pestaña «Descubrir»."
@@ -382,7 +382,7 @@
       "description": {
         "en": "Make the chosen vacuum beep so you can find it under the furniture.",
         "fr": "Fait sonner l'aspirateur choisi pour le retrouver sous les meubles.",
-        "de": "Lässt den gewählten Saugroboter piepen, damit Sie ihn unter den Möbeln wiederfinden.",
+        "de": "Lässt den gewählten Saugroboter piepen, damit du ihn unter den Möbeln wiederfindest.",
         "es": "Hace sonar el aspirador elegido para que pueda encontrarlo debajo de los muebles."
       },
       "timeout_seconds": 30,
