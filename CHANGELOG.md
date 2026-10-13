@@ -8,7 +8,7 @@ All notable changes to this integration are documented here. The format follows
 
 ### Added
 
-- German and Spanish translations (configuration screen, messages, widgets, documentation).
+- German and Spanish translations (configuration screen, messages, documentation).
 
 ## [1.1.0] - 2026-10-06
 
