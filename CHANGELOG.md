@@ -6,6 +6,8 @@ All notable changes to this integration are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-13
+
 ### Added
 
 - German and Spanish translations (configuration screen, messages, documentation).
@@ -29,7 +31,8 @@ All notable changes to this integration are documented here. The format follows
 - Development dependencies updated to their latest versions (ESLint 10.12, Prettier 3.9.9, globals 17.13).
 - Integration SDK upgraded from 0.11 to 0.14.
 
-[Unreleased]: https://github.com/prohand/gladys-ultenic/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/prohand/gladys-ultenic/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/prohand/gladys-ultenic/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/prohand/gladys-ultenic/releases/tag/v1.1.0
 
 ### Fixed
