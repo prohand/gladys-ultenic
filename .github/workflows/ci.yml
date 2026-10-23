@@ -18,16 +18,20 @@ on:
       - main
   pull_request:
 
+# The jobs only read the repository: the token gets no write access.
+permissions:
+  contents: read
+
 jobs:
   quality:
     runs-on: ubuntu-latest
     name: Lint & test
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
