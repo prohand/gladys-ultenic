@@ -1,6 +1,6 @@
 {
   "name": "gladys-ultenic",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "External Gladys Assistant integration to monitor and control Ultenic robot vacuums through the Tuya IoT cloud.",
   "type": "module",
