@@ -6,6 +6,10 @@ All notable changes to this integration are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-11-16
+
+- Maintenance release, no functional change.
+
 ## [1.2.3] - 2026-11-16
 
 - Update `@gladysassistant/integration-sdk` to 0.16.1 (security update).
@@ -45,7 +49,8 @@ All notable changes to this integration are documented here. The format follows
 - Development dependencies updated to their latest versions (ESLint 10.12, Prettier 3.9.9, globals 17.13).
 - Integration SDK upgraded from 0.11 to 0.14.
 
-[Unreleased]: https://github.com/prohand/gladys-ultenic/compare/v1.2.3...HEAD
+[Unreleased]: https://github.com/prohand/gladys-ultenic/compare/v1.2.4...HEAD
+[1.2.4]: https://github.com/prohand/gladys-ultenic/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/prohand/gladys-ultenic/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/prohand/gladys-ultenic/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/prohand/gladys-ultenic/compare/v1.2.0...v1.2.1
